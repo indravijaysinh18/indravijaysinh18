@@ -1,0 +1,23 @@
+name: S3 Backup
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: S3 Backup
+        uses: peter-evans/s3-backup@v1.1.1
+        env:
+          ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          MIRROR_TARGET: ${{ secrets.MIRROR_TARGET }}
+        with:
+          args: --overwrite --remove
